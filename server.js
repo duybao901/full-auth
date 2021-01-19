@@ -15,6 +15,10 @@ app.use(fileUpload({
     useTempFiles: true,
 }));
 
+// Router
+app.use('/user', require('./router/user.router'));
+
+
 // Connect mongoodb
 const URI = process.env.MONGODB_URL;
 mongoose.connect(URI, {
