@@ -2,7 +2,7 @@ const Users = require('../model/user.model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const sendMail = require('./sendMail');
-const { createTestAccount } = require('nodemailer');
+const sendEmail = require('./sendMail');
 const { CLIENT_URL } = process.env;
 
 const userController = {
@@ -28,24 +28,22 @@ const userController = {
             const newUser = {
                 name, email, password: passwordHash
             }
-            console.log(newUser);
 
             const activation_token = createActivationToken(newUser);
-            console.log({ activation_token })
 
             const url = `${CLIENT_URL}/user/activate/${activation_token}`;
-            sendMail(email, url);
+            sendMail(email, url, "Verify your email address");
 
             res.json({ msg: "Register successfully! Please activate your account to start." });
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }
     },
+
     activationEmail: async (req, res) => {
         try {
             const { activation_token } = req.body;
             const user = jwt.verify(activation_token, process.env.CREATE_ACTIVATION_TOKEN);
-            console.log(user);
 
             const { name, email, password } = user;
 
@@ -65,6 +63,7 @@ const userController = {
             return res.status(400).json({ msg: err.message })
         }
     },
+
     login: async (req, res) => {
         try {
             const { email, password } = req.body;
@@ -87,6 +86,7 @@ const userController = {
             return res.status(400).json({ msg: err.message })
         }
     },
+
     getAccessToken: (req, res) => {
         try {
             const rf_token = req.cookies.refreshtoken;
@@ -102,7 +102,35 @@ const userController = {
         } catch (err) {
             res.status(500).json({ msg: err.message });
         }
+    },
+
+    forgotPassword: async (req, res) => {
+        try {
+            const { email } = req.body;
+            const user = await Users.findOne({ email });
+            if (!user) return res.status(400).json({ msg: "Email not exist" });
+
+            const access_token = createAccessToken({ id: user._id }, process.env.CREATE_ACCESS_TOKEN);
+            const url = `${CLIENT_URL}/user/reset/${access_token}`;
+            sendEmail(email, url, "Verify your email address");
+
+            res.json({ msg: 'Re-send the password, please check your email' });
+
+        } catch (err) {
+            res.status(500).json({ msg: err.message });
+        }
+    },
+
+    resetPassword: async (req, res) => {
+        const { password } = req.body;
+        const passwordhHash = await bcrypt.hash(password, 12);
+        console.log(req.user);
+        await Users.findOneAndUpdate({ id: req.user._id }, {
+            password: passwordhHash
+        })
+        return res.json({ msg: "Password successfully changed" })
     }
+
 }
 
 function validateEmail(email) {
@@ -121,4 +149,5 @@ function createAccessToken(payload) {
 function createRefreshToken(payload) {
     return jwt.sign(payload, process.env.CREATE_REFRESH_TOKEN, { expiresIn: "15m" })
 }
+
 module.exports = userController;
