@@ -2,6 +2,7 @@ const Users = require('../model/user.model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const sendMail = require('./sendMail');
+const { createTestAccount } = require('nodemailer');
 const { CLIENT_URL } = process.env;
 
 const userController = {
@@ -58,10 +59,48 @@ const userController = {
             })
 
             await newUser.save();
-            return res.json({ msg: "Activated email" });
+            return res.json({ msg: "Acount has been Activated" });
 
         } catch (err) {
             return res.status(400).json({ msg: err.message })
+        }
+    },
+    login: async (req, res) => {
+        try {
+            const { email, password } = req.body;
+            const user = await Users.findOne({ email });
+
+            if (!user) return res.status(400).json({ msg: "This email does not exist" });
+
+            const isPassword = await bcrypt.compare(password, user.password);
+            if (!isPassword) return res.status(400).json({ msg: "Password is incorrect" });
+
+            const refresh_token = createRefreshToken({ id: user._id }, process.env.CREATE_REFRESH_TOKEN);
+            res.cookie("refreshtoken", refresh_token, {
+                httpOnly: true,
+                path: 'user/refresh_token',
+                maxAge: 7 * 24 * 60 * 60 // 7 days
+            })
+            return res.json({ msg: "Login successfully" })
+
+        } catch (err) {
+            return res.status(400).json({ msg: err.message })
+        }
+    },
+    getAccessToken: (req, res) => {
+        try {
+            const rf_token = req.cookies.refreshtoken;
+
+            if (!rf_token) return res.status(400).json({ msg: "Please login now!" });
+
+            jwt.verify(rf_token, process.env.CREATE_REFRESH_TOKEN, (err, user) => {
+                if (err) return res.status(400).json({ msg: "Please login now !" });
+
+                const accessToken = createAccessToken({ id: user._id });
+                return res.json({ accessToken })
+            })
+        } catch (err) {
+            res.status(500).json({ msg: err.message });
         }
     }
 }
