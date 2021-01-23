@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const auth = require("../middleware/auth");
+const authAdmin = require('../middleware/authAdmin');
 
 const userController = require('../controller/user.controller');
 
@@ -15,6 +16,10 @@ router.get('/refresh_token', userController.getAccessToken);
 router.post('/forgot', userController.forgotPassword);
 
 router.post('/reset', auth, userController.resetPassword);
+
+router.get('/infor', auth, userController.getUserInfor);
+
+router.get('/all_infor', auth, authAdmin, userController.getAllUserInfor);
 
 
 module.exports = router;

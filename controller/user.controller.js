@@ -75,11 +75,13 @@ const userController = {
             if (!isPassword) return res.status(400).json({ msg: "Password is incorrect" });
 
             const refresh_token = createRefreshToken({ id: user._id }, process.env.CREATE_REFRESH_TOKEN);
+
             res.cookie("refreshtoken", refresh_token, {
                 httpOnly: true,
                 path: 'user/refresh_token',
                 maxAge: 7 * 24 * 60 * 60 // 7 days
             })
+
             return res.json({ msg: "Login successfully" })
 
         } catch (err) {
@@ -96,7 +98,7 @@ const userController = {
             jwt.verify(rf_token, process.env.CREATE_REFRESH_TOKEN, (err, user) => {
                 if (err) return res.status(400).json({ msg: "Please login now !" });
 
-                const accessToken = createAccessToken({ id: user._id });
+                const accessToken = createAccessToken({ id: user.id });
                 return res.json({ accessToken })
             })
         } catch (err) {
@@ -122,13 +124,37 @@ const userController = {
     },
 
     resetPassword: async (req, res) => {
-        const { password } = req.body;
-        const passwordhHash = await bcrypt.hash(password, 12);
-        console.log(req.user);
-        await Users.findOneAndUpdate({ id: req.user._id }, {
-            password: passwordhHash
-        })
-        return res.json({ msg: "Password successfully changed" })
+        try {
+            const { password } = req.body;
+            const passwordhHash = await bcrypt.hash(password, 12);
+
+            await Users.findOneAndUpdate({ id: req.user._id }, {
+                password: passwordhHash
+            })
+            return res.json({ msg: "Password successfully changed" })
+        } catch (err) {
+            res.status(500).json({ msg: err.message });
+        }
+
+    },
+
+    getUserInfor: async (req, res) => {
+        try {
+            const user = await Users.findById(req.user.id).select("-password");
+            if (!user) return res.status(400).json({ msg: "User not found" });
+            return res.json(user);
+        } catch (err) {
+            res.status(500).json({ msg: err.message });
+        }
+    },
+
+    getAllUserInfor: async (req, res) => {
+        try {
+            const users = await Users.find();
+            return res.json(users);
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
     }
 
 }
