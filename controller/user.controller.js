@@ -155,7 +155,43 @@ const userController = {
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }
-    }
+    },
+
+    logout: (req, res) => {
+        try {
+            res.clearCookie("refreshtoken", { path: "user/refresh_token" });
+            return res.json({ msg: "Logged out." });
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    },
+
+    updateUserInfor: async (req, res) => {
+        try {
+            const { name, avatar } = req.body;
+            await Users.findByIdAndUpdate({ _id: req.user.id }, {
+                name, avatar
+            })
+
+            return res.json({ msg: "Update success!" });
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    },
+
+    updateUserRole: async (req, res) => {
+        try {
+            const { role } = req.body;
+            await Users.findByIdAndUpdate({ _id: req.params.id }, {
+                role
+            });
+            return res.json({ msg: "Update success!" });
+
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    },
+    
 
 }
 

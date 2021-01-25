@@ -16,6 +16,7 @@ app.use(fileUpload({
 }));
 
 // Router
+app.use('/api', require('./router/upload.router'));
 app.use('/user', require('./router/user.router'));
 
 

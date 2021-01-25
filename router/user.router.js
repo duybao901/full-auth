@@ -21,5 +21,11 @@ router.get('/infor', auth, userController.getUserInfor);
 
 router.get('/all_infor', auth, authAdmin, userController.getAllUserInfor);
 
+router.get('/logout', userController.logout);
+
+router.post('/update', auth, userController.updateUserInfor);
+
+router.post('/update_role/:id', auth, authAdmin, userController.updateUserInfor);
+
 
 module.exports = router;
