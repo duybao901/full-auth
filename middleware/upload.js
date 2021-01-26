@@ -8,11 +8,10 @@ const uploadImage = (req, res, next) => {
         }
 
         const file = req.files.file;
-        console.log(file);
 
         if (file.size > 1024 * 1024) {// 1mb
             removeTempFile(file.tempFilePath)
-            return res.status(400).json({ msg: "Size too large" });
+            return res.status(400).json({ msg: "Please upload a picture smaller than 1 MB." });
         }
 
         if (file.mimetype !== 'image/png' && file.mimetype !== 'image/jpeg' && file.mimetype !== 'image/jpg') {
