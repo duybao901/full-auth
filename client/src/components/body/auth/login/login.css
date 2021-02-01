@@ -1,0 +1,75 @@
+.login {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px 0;
+    color: #fff;
+}
+
+.nes-badge {
+    width: 100%;
+    margin: 30px 0;
+}
+
+.login .nes-badge {
+    width: 100%;
+    margin: 30px 0;
+}
+
+.login__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.login__header h2 {
+    font-size: 35px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.login__header span {
+    display: block;
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+}
+
+.login__form-item {
+    margin-bottom: 12px;
+}
+
+.login__form-item label {
+    display: block;
+    font-size: 16px;
+}
+
+.login__form-item input {
+    margin: 10px 0;
+}
+
+.login__form-ct {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.login__form-ct button {
+    background-color: #000;
+    width: 150px;
+    padding: 15px 0;
+    color: #fff;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all .1s linear;
+}
+
+.login__form-ct button:hover {
+    background-color: #333333;
+}
+
+.login__form-ct a {
+    color: crimson;
+}

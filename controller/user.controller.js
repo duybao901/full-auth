@@ -60,13 +60,16 @@ const userController = {
             return res.json({ msg: "Acount has been Activated" });
 
         } catch (err) {
-            return res.status(400).json({ msg: err.message })
+            return res.status(500).json({ msg: err.message })
         }
     },
 
     login: async (req, res) => {
         try {
+
             const { email, password } = req.body;
+            if (!email || !password)
+                return res.status(400).json({ msg: "Please fill all the fields" })
             const user = await Users.findOne({ email });
 
             if (!user) return res.status(400).json({ msg: "This email does not exist" });
@@ -191,7 +194,7 @@ const userController = {
             return res.status(500).json({ msg: err.message });
         }
     },
-    
+
 
 }
 

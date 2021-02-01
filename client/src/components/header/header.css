@@ -1,0 +1,32 @@
+.header {
+    background-color: #f7d51d;
+    display: flex;
+    height: 80px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+}
+
+.header__logo .nes-octocat {
+    transform: scale(.7);
+}
+
+.header .header__right {
+    color: #f1f1f1;
+    width: 30%;
+    display: flex;
+    justify-content: flex-end;
+    text-transform: uppercase;
+}
+
+.header .header__right div {
+    padding: 10px;
+}
+
+.header .header__right div i {
+    margin-right: 8px;
+}
+
+.header .header__right div a {
+    color: #f1f1f1;
+}
