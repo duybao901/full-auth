@@ -39,3 +39,5 @@ button:focus {
 @import url('./components/header/header.css');
 @import url('./components/body/auth/login/login.css');
 @import url('./components/body/auth/register/register.css');
+@import url('./components/body/auth/forgotPassword/forgotPassword.css');
+@import url('./components/body/auth/profile/profile.css');

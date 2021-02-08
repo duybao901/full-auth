@@ -20,11 +20,8 @@ const UserSchema = new mongoose.Schema({
         default: 0, // 0 is user, 1 is admin
     },
     avatar: {
-        type: Object,
-        default: {
-            public_id: '',
-            url: 'https://res.cloudinary.com/dxnfxl89q/image/upload/v1609941293/javcommerce/person_slkixq.jpg'
-        }
+        type: String,
+        default: "https://res.cloudinary.com/dxnfxl89q/image/upload/v1612713326/fullauth/pkvlumfwc2nxtdnwcppk.jpg"
     }
 })
 module.exports = mongoose.model('Users', UserSchema);

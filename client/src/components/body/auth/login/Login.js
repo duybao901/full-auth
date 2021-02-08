@@ -8,7 +8,7 @@ import { showErrorMessage, showSuccessMessage } from '../../../ultis/notificatio
 import * as auth from '../../../../redux/actions/authAction'
 
 const initialState = {
-    email: '10cb4tranbaoduy@gmail.com',
+    email: '',
     password: '',
     err: '',
     success: '',
@@ -86,7 +86,7 @@ function Login() {
                 </div>
                 <div className="login__form-ct">
                     <button type="submit" className={loading ? "nes-btn  is-disabled" : "nes-btn is-warning"}>Login</button>
-                    <Link to="/forgot_password">Forgot your password?</Link>
+                    <Link to="/forgot">Forgot your password?</Link>
                 </div>
 
                 <div style={{ marginTop: '20px' }}>

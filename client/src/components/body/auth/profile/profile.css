@@ -1,0 +1,94 @@
+.profile {
+    padding: 30px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.profile__left {
+    width: 40%;
+}
+
+.profile__left h2 {
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.profile__avatar {
+    width: 150px;
+    height: 150px;
+    position: relative;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 30px auto;
+}
+
+.profile__avatar:hover div {
+    bottom: 0;
+}
+
+.profile__avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile__avatar div {
+    position: absolute;
+    bottom: -80px;
+    background: rgba(255, 255, 255, .5);
+    text-transform: uppercase;
+    font-size: 14px;
+    height: 50%;
+    width: 100%;
+    transition: .3s ease-in-out;
+    text-align: center;
+    cursor: pointer;
+}
+
+.profile__avatar div i {
+    display: block;
+    text-align: center;
+    font-size: 30px;
+    margin: 5px;
+}
+
+.profile__avatar div #file_up {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.profile__infor div {
+    margin: 10px 0;
+}
+
+.profile__right {
+    width: 60%;
+    padding-left: 50px;
+}
+
+.customers {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.customers tr th {
+    color: #ffc107;
+    text-transform: uppercase;
+}
+
+.customers tr th, .customers tr td {
+    border: 1px solid #ffc107;
+    padding: 10px 5px;
+}
+
+.customers tr td {
+    font-size: 14px;
+}.customers tr:nth-child(even) {
+    background-color: rgba(255, 193, 7, .05);
+}

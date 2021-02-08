@@ -30,6 +30,8 @@ function App() {
         dispatch(authActions.login())
         return authActions.fecthUser(token).then(res => {
           dispatch(authActions.getUserInfor(res));
+        }).catch(err => {
+          if (err) throw err;
         })
       }
       getUser();

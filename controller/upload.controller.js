@@ -12,7 +12,6 @@ const uploadController = {
         try {
 
             const file = req.files.file;
-
             // upload image cloudinary in folder fullauth
             cloudinary.v2.uploader.upload(file.tempFilePath, {
                 folder: 'fullauth', width: 250, height: 250, crop: "fill"

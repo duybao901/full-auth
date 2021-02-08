@@ -1,19 +1,43 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import axios from 'axios'
 
 function Header() {
     const auth = useSelector(state => state.auth)
 
     const { user, isLogged } = auth
 
+    const showMenu = () => {
+        if (isLogged) {
+            const userMenu = document.querySelector('.header__user-menu');
+            userMenu.classList.toggle('active')
+        }
+    }
+
+    const logout = async () => {
+        try {
+            localStorage.clear();
+            const res = await axios.get('/user/logout');
+            alert(res.data.msg);
+            window.location.href = "/";
+        } catch (err) {
+            if (err) throw err;
+        }
+    }
 
     const userLink = () => {
         if (Object.keys(user).length > 0) {
-            return <Link className='header__user' to='/user/detail'>
-                <img src={user.avatar.url} alt='user face'></img>
-                {user.name}
-            </Link>
+            return <div className='header__user' onClick={showMenu}>
+                <img src={user.avatar} alt='user face'></img>
+                <span> {user.name}</span>
+                <div className="header__user-menu">
+                    <div>
+                        <Link to="/profile">Profile</Link>
+                    </div>
+                    <div><button href="#" onClick={logout}>logout</button></div>
+                </div>
+            </div>
         }
     }
 
@@ -25,11 +49,10 @@ function Header() {
                 </Link>
             </div>
             <div className="header__right">
-                <div>
-                    {isLogged ? userLink() : <Link to="/login">
+                <div style={{color:"white"}}>
+                    {isLogged ? userLink() : <Link to="/login" style={{color:'white'}}>
                         Sign in
                     </Link>}
-
                 </div>
             </div>
         </div>

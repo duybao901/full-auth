@@ -34,7 +34,7 @@ const userController = {
             const url = `${CLIENT_URL}/user/activate/${activation_token}`;
             sendMail(email, url, "Verify your email address");
 
-            res.json({ msg: "Register successfully! Please activate your account to start." });
+            res.json({ msg: "Register successfully! Please go to email activate your account to start." });
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }
@@ -134,11 +134,11 @@ const userController = {
             await Users.findOneAndUpdate({ id: req.user._id }, {
                 password: passwordhHash
             })
+
             return res.json({ msg: "Password successfully changed" })
         } catch (err) {
             res.status(500).json({ msg: err.message });
         }
-
     },
 
     getUserInfor: async (req, res) => {

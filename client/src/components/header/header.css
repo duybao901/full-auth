@@ -27,6 +27,44 @@
     margin-right: 8px;
 }
 
-.header .header__right div a {
-    color: #f1f1f1;
+.header .header__user {
+    color: #fff;
+    display: flex;
+    align-items: center;
+    position: relative;
+    cursor: inherit;
+}
+
+.header__user img {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    margin-right: 10px;
+    border-radius: 50%;
+}
+
+.header__user-menu.active {
+    display: block;
+    z-index: 999;
+}
+
+.header__user-menu {
+    position: absolute;
+    display: none;
+    top: 100%;
+    left: 0;
+    /* width: 200px; */
+    height: auto;
+    padding: 20px;
+    background: #212529;
+}
+
+.header__user-menu div a {
+    color: #fff;
+}
+
+.header__user-menu div button {
+    color: #fff;
+    text-transform: uppercase;
+    background-color: transparent;
 }
