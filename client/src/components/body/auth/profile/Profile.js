@@ -206,7 +206,7 @@ function Profile() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {users.map(user => {
+                                {isAdmin ? users.length > 0 ? users.map(user => {
                                     return <tr key={user._id}>
                                         <td className='profile__customers-id'>{user._id}</td>
                                         <td>{user.name}</td>
@@ -221,10 +221,10 @@ function Profile() {
                                         </td>
                                         <td className='profile__customers-action'>
                                             <Link to={`/edit_user/${user._id}`} ><i className="far fa-edit" title="Edit User"></i></Link>
-                                            <button onClick={() => deleteUser(user._id)}><i className="far fa-trash-alt" title="Delete User"></i></button>
+                                            {user.email !== auth.user.email ? <button onClick={() => deleteUser(user._id)}><i className="far fa-trash-alt" title="Delete User"></i></button> : ''}
                                         </td>
                                     </tr>
-                                })}
+                                }) : "Loading..." : ''}
                             </tbody>
                         </table>
                     </div>

@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux'
 import axios from 'axios'
 import { Link, useHistory } from 'react-router-dom'
 import { GoogleLogin } from 'react-google-login';
+import FacebookLogin from 'react-facebook-login';
 import { showErrorMessage, showSuccessMessage } from '../../../ultis/notification/Notification'
 
 import * as auth from '../../../../redux/actions/authAction'
@@ -19,6 +20,7 @@ function Login() {
     const [user, setUser] = useState(initialState);
     const dispatch = useDispatch();
     const history = useHistory();
+    const [socialLoaing, setSocialLoading] = useState(false)
     const { email, password, err, success, loading } = user;
 
     const onHandleSubmit = async (e) => {
@@ -61,19 +63,27 @@ function Login() {
 
     const responseGoogle = async (response) => {
         try {
-            console.log(response);
+            setSocialLoading(true);
+
             const res = await axios.post('/user/google_login', { tokenId: response.tokenId })
             setUser({
                 ...user,
                 success: res.data.msg,
-                err: ''
+                err: '',
+                loading: true,
             })
             localStorage.setItem('firstlogin', true);
+            setUser({
+                loading: false,
+            })
+            setSocialLoading(false);
 
             dispatch(auth.login());
 
             history.push('/');
         } catch (err) {
+            setSocialLoading(false);
+
             err.response.data.msg && setUser({
                 ...user,
                 err: err.response.data.msg, success: ''
@@ -81,6 +91,37 @@ function Login() {
         }
     }
 
+    const responseFacebook = async (response) => {
+        try {
+            setSocialLoading(true);
+
+            const { accessToken, userID } = response;
+            const res = await axios.post('/user/facebook_login', { accessToken, userID })
+            setUser({
+                ...user,
+                success: res.data.msg,
+                err: '',
+                loading: true,
+            })
+            localStorage.setItem('firstlogin', true);
+            setUser({
+                loading: false,
+            })
+            setSocialLoading(false);
+
+            dispatch(auth.login());
+
+            history.push('/');
+        } catch (err) {
+            setSocialLoading(false);
+
+            err.response.data.msg && setUser({
+                ...user,
+                err: err.response.data.msg, success: ''
+            })
+        }
+    }
+    console.log(socialLoaing)
     return (
         <div className='login'>
             <div className='login__header'>
@@ -111,12 +152,20 @@ function Login() {
                     <Link to="/forgot">Forgot your password?</Link>
                 </div>
                 <p style={{ margin: "20px 0" }}>Or Login With</p>
-                <GoogleLogin
-                    clientId="376499416274-1vdl62rk3v202at8nbnejn8iq0h5p4ll.apps.googleusercontent.com"
-                    buttonText="Login With Google"
-                    onSuccess={responseGoogle}
-                    cookiePolicy={'single_host_origin'}
-                />
+                <div className='social-login'>
+                    <div>{socialLoaing ? "Loading..." : ''}</div>
+                    <GoogleLogin
+                        clientId="376499416274-1vdl62rk3v202at8nbnejn8iq0h5p4ll.apps.googleusercontent.com"
+                        buttonText="Login With Google"
+                        onSuccess={responseGoogle}
+                        cookiePolicy={'single_host_origin'}
+                    />
+                    <FacebookLogin
+                        appId="764239864202944"
+                        autoLoad={false}
+                        fields="name,email,picture" 
+                        callback={responseFacebook} />
+                </div>
                 <div style={{ marginTop: '20px' }}>
                     <p>New Customer? <Link to="/register">Register</Link></p>
                 </div>

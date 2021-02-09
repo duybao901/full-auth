@@ -40,6 +40,7 @@ function ResetPassword() {
         }
 
         try {
+            setData({...data, loading: true})
             const res = await axios.post('/user/reset', { password }, {
                 headers: { Authorization: token }
             });

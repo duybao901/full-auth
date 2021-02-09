@@ -24,7 +24,7 @@ function Body() {
             <Route path='/register' component={isLogged ? PageNotFound : Register} exact></Route>
             <Route path='/user/activate/:activation_token' component={ActivationEmail} ></Route>
             <Route path='/forgot' component={isLogged ? PageNotFound : ForgotPassword} exact ></Route>
-            <Route path='/reset/:token' component={isLogged ? PageNotFound : ResetPassword} exact ></Route>
+            <Route path='/user/reset/:token' component={isLogged ? PageNotFound : ResetPassword} exact ></Route>
             <Route path='/profile' component={Profile} exact></Route>
             <Route path='/edit_user/:id' component={EditUser} exact></Route>
         </Switch>
