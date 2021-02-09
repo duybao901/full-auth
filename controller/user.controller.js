@@ -195,6 +195,15 @@ const userController = {
         }
     },
 
+    deleteUser: async (req, res) => {
+        try {
+            await Users.findByIdAndDelete({ _id: req.params.id });
+            return res.json({ msg: "Delete success!" });
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    }
+
 
 }
 

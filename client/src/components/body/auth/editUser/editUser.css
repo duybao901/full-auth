@@ -1,0 +1,13 @@
+.edit-user__goback {
+    margin: 20px 100px;
+    display: block;
+}
+
+.edit-user__infor {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.edit-user__infor div{
+    margin: 20px 0;
+}

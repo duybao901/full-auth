@@ -3,13 +3,16 @@ import React from 'react'
 function Home() {
     return (
         <div style={{ padding: '20px' }}>
-            <h2>I have no idea with this page but I love this song.<i className="nes-icon is-medium like"></i></h2>
-            <h2>Contact me <a href="https://www.facebook.com/bao.duy.076" target="_blank"><i className="nes-icon facebook is-medium" ></i></a></h2>
+            <h2><i className="nes-icon is-medium star"></i> The main part of the project is mainly in the login section </h2>
+            <br />
+            <h2><i className="nes-icon is-medium star"></i> I have no idea with this page but I love this song.<i className="nes-icon is-medium like"></i></h2>
+            <br />
+            <h2><i className="nes-icon is-medium star"></i> Contact me <a rel="noreferrer" href="https://www.facebook.com/bao.duy.076" target="_blank"><i className="nes-icon facebook is-medium" ></i></a></h2>
             <div style={{ margin: '50px 0', textAlign: 'center' }}>
                 <iframe allowFullScreen width="560" height="315" src="https://www.youtube.com/embed/IQKJhatJt8A" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
             </div>
             <section className="nes-container ">
-                <a href="https://www.youtube.com/watch?v=rYEDA3JcQqw" target="_blank"><i className="nes-icon youtube is-medium" style={{ float: 'right' }}></i></a>
+                <a href="https://www.youtube.com/watch?v=rYEDA3JcQqw" target="_blank" rel="noreferrer"><i className="nes-icon youtube is-medium" style={{ float: 'right' }}></i></a>
                 <h2>Rolling In The Deep</h2>
                     There's a fire starting in my heart<br />
                     Reaching a fever pitch and it's bring me out the dark<br />

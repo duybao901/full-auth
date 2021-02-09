@@ -2,10 +2,11 @@
     padding: 30px;
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .profile__left {
-    width: 40%;
+    width: 35%;
 }
 
 .profile__left h2 {
@@ -67,8 +68,12 @@
 }
 
 .profile__right {
-    width: 60%;
+    width: 65%;
     padding-left: 50px;
+}
+
+.profile__customers {
+    width: 100%;
 }
 
 .customers {
@@ -80,6 +85,7 @@
 .customers tr th {
     color: #ffc107;
     text-transform: uppercase;
+    font-size: 12px;
 }
 
 .customers tr th, .customers tr td {
@@ -88,7 +94,36 @@
 }
 
 .customers tr td {
-    font-size: 14px;
-}.customers tr:nth-child(even) {
+    font-size: 12px;
+}
+
+.customers tr:nth-child(even) {
     background-color: rgba(255, 193, 7, .05);
+}
+
+.profile__customers-id {
+    max-width: 100px;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+}
+
+.profile__customers-action {
+    text-align: center;
+}
+
+.profile__customers-action a {
+    color: #ffc107;
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.profile__customers-action button {
+    color: #ffc107;
+    font-size: 20px;
+    margin-right: 10px;
+    background: transparent;
+}
+
+.profile__loading  i{
+    animation: animateLoading 2s linear infinite;
 }

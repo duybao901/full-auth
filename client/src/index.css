@@ -7,6 +7,7 @@
 body {
   margin: 0;
   background-image: url(https://st.deviantart.net/signinup/sisu_bg-min.png);
+  overflow-x: hidden;
 }
 
 code {
@@ -41,3 +42,4 @@ button:focus {
 @import url('./components/body/auth/register/register.css');
 @import url('./components/body/auth/forgotPassword/forgotPassword.css');
 @import url('./components/body/auth/profile/profile.css');
+@import url('./components/body/auth/editUser/editUser.css');

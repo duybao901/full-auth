@@ -11,6 +11,8 @@ function Header() {
     const showMenu = () => {
         if (isLogged) {
             const userMenu = document.querySelector('.header__user-menu');
+            // const userArrow = document.querySelector('.header__user-arrow');
+            // userArrow.classList.toggle('active')
             userMenu.classList.toggle('active')
         }
     }
@@ -31,6 +33,7 @@ function Header() {
             return <div className='header__user' onClick={showMenu}>
                 <img src={user.avatar} alt='user face'></img>
                 <span> {user.name}</span>
+                {/* <i className="fas fa-sort-down header__user-arrow"></i> */}
                 <div className="header__user-menu">
                     <div>
                         <Link to="/profile">Profile</Link>

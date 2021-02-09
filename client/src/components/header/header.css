@@ -59,6 +59,18 @@
     background: #212529;
 }
 
+.header__user-arrow {
+    /* transition: all .2s linear; */
+    font-size: 20px;
+    margin-left: 5px;
+    transform: rotateX(0deg);
+    margin-bottom: 5px;
+}
+
+.header__user-arrow.active {
+    transform: rotateX(180deg);
+}
+
 .header__user-menu div a {
     color: #fff;
 }

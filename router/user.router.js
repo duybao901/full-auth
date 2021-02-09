@@ -25,7 +25,9 @@ router.get('/logout', userController.logout);
 
 router.post('/update', auth, userController.updateUserInfor);
 
-router.post('/update_role/:id', auth, authAdmin, userController.updateUserInfor);
+router.patch('/update_role/:id', auth, authAdmin, userController.updateUserRole);
 
+router.delete('/delete/:id', auth, authAdmin,userController.deleteUser)
+ 
 
 module.exports = router;

@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { showErrorMessage, showSuccessRegisterMessage } from '../../../ultis/notification/Notification'
-import { isLength, isMatch } from '../../../ultis/validation/Validation'
+import { isEmpty, isLength, isMatch } from '../../../ultis/validation/Validation'
 import axios from 'axios'
+import { fetchAllUsers, getAllUsers } from '../../../../redux/actions/usersAction'
 
 const initialState = {
     name: '',
@@ -15,6 +17,8 @@ const initialState = {
 function Profile() {
     const auth = useSelector(state => state.auth);
     const token = useSelector(state => state.token);
+    const users = useSelector(state => state.users);
+    const dispatch = useDispatch();
     const { user, isAdmin } = auth;
     const [data, setData] = useState(initialState);
     const [avatar, setAvatar] = useState(false);
@@ -22,6 +26,14 @@ function Profile() {
     const [callback, setCallback] = useState(false);
 
     const { name, password, cf_password, err, success } = data;
+
+    useEffect(() => {
+        if (isAdmin) {
+            fetchAllUsers(token).then(res => {
+                dispatch(getAllUsers(res));
+            })
+        }
+    }, [isAdmin, users, dispatch, token, callback, users.role])
 
     const onHandleChange = (e) => {
         setData({ ...data, [e.target.name]: e.target.value })
@@ -61,13 +73,13 @@ function Profile() {
         try {
             console.log(avatar);
             // const formData = new FormData();
-            const res = await axios.post('/user/update', {
+            await axios.post('/user/update', {
                 name: name ? name : user.name,
                 avatar: avatar ? avatar : user.avatar
             }, {
                 headers: { Authorization: token }
             });
-            setData({ ...data, err: '', success: res.data.msg });
+            setData({ ...data, err: '', success: 'Update name successfully' });
         } catch (err) {
             if (err) {
                 setData({ ...data, err: err.response.data.msg, success: '' })
@@ -81,7 +93,11 @@ function Profile() {
                 setData({ ...data, err: 'Password must last at 6 characters', success: '' });
                 return null;
             }
-            if (isMatch(password, cf_password)) {
+            if (isEmpty(cf_password) && !isEmpty(password)) {
+                setData({ ...data, err: 'Password not match', success: '' });
+                return null;
+            }
+            if (!isMatch(password, cf_password)) {
                 setData({ ...data, err: 'Password not match', success: '' });
                 return null;
             }
@@ -96,12 +112,29 @@ function Profile() {
         }
     }
 
-    const onHandleSubmit = () => {
-
-        updateInfor();
-
-        if (password || cf_password) {
+    const onHandleSubmit = (e) => {
+        e.preventDefault();
+        if (name) {
+            updateInfor();
+        }
+        if (password) {
             updatePassword();
+        }
+
+    }
+
+    const deleteUser = async (id) => {
+        try {
+            if (window.confirm("Are you sure want to delete this user")) {
+                setLoading(true);
+                const res = await axios.delete(`/user/delete/${id}`, {
+                    headers: { Authorization: token }
+                });
+                setLoading(false)
+                setCallback(!callback);
+            }
+        } catch (err) {
+            setData({ ...err, err: err.response.data.msg, success: '' })
         }
     }
 
@@ -109,7 +142,7 @@ function Profile() {
         <React.Fragment>
             {err && showErrorMessage(err)}
             {success && showSuccessRegisterMessage(success)}
-            {loading && "loading..."}
+            {loading && <span className="nes-text is-warning" style={{ fontSize: '20px', display: 'block' }}>Loading...</span>}
             <div className='profile'>
                 <div className='profile__left'>
                     <h2>{isAdmin ? "Admin Profile" : "User profile"}</h2>
@@ -122,92 +155,79 @@ function Profile() {
                         </div>
                     </div>
                     <div className='profile__infor'>
-                        <div>
-                            <label htmlFor="name">Name</label>
-                            <input type='text' name='name' id='name'
-                                placeholder="Enter your name..." defaultValue={user.name}
-                                className="nes-input is-warning"
-                                onChange={onHandleChange}></input>
-                        </div>
-                        <div>
-                            <label htmlFor="email">Email</label>
-                            <input type='email' name='email' id='email'
-                                placeholder="Enter your email..." defaultValue={user.email} disabled
-                                className="nes-input is-warning"
-                            ></input>
-                        </div>
-                        <div>
-                            <label htmlFor="password">Password</label>
-                            <input type='password' name='password' id='password'
-                                placeholder="Enter your password..." defaultValue={user.password}
-                                className="nes-input is-warning"
-                                onChange={onHandleChange}></input>
-                        </div>
-                        <div>
-                            <label htmlFor="confirmPassword">Confirm Password</label>
-                            <input type='password' name='cf_password' id='confirmPassword'
-                                placeholder="Enter your confirm password..." defaultValue={user.cf_password}
-                                className="nes-input is-warning"
-                                onChange={onHandleChange}></input>
-                        </div>
-                        <button type="submit" className="nes-btn is-warning" onClick={onHandleSubmit}>Update</button>
+                        <form>
+                            <div>
+                                <label htmlFor="name">Name</label>
+                                <input type='text' name='name' id='name'
+                                    placeholder="Enter your name..." defaultValue={user.name}
+                                    className="nes-input is-warning"
+                                    onChange={onHandleChange}></input>
+                            </div>
+                            <div>
+                                <label htmlFor="email">Email</label>
+                                <input type='email' name='email' id='email'
+                                    placeholder="Enter your email..." defaultValue={user.email} disabled
+                                    className="nes-input is-warning"
+                                ></input>
+                            </div>
+                            <div>
+                                <label htmlFor="password">Password</label>
+                                <input type='password' name='password' id='password'
+                                    placeholder="Enter your password..." defaultValue={user.password}
+                                    className="nes-input is-warning"
+                                    // autoComplete=''
+
+                                    onChange={onHandleChange}></input>
+                            </div>
+                            <div>
+                                <label htmlFor="confirmPassword">Confirm Password</label>
+                                <input type='password' name='cf_password' id='confirmPassword'
+                                    placeholder="Enter your confirm password..." defaultValue={user.cf_password}
+                                    className="nes-input is-warning"
+                                    // autoComplete=''
+                                    onChange={onHandleChange}></input>
+                            </div>
+                            <button type="submit" className="nes-btn is-warning" onClick={onHandleSubmit}>Update</button>
+                        </form>
                     </div>
                 </div>
+
                 <div className='profile__right'>
                     <h2>My order</h2>
-                    <table className='customers'>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Admin</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                                <td>@mdo</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                                <td>@mdo</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                                <td>@mdo</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                                <td>@mdo</td>
-                            </tr>
-                            {/* <tr>
-                            <th>2</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                        </tr>
-                        <tr>
-                            <th>3</th>
-                            <td>Larry</td>
-                            <td>the Bird</td>
-                            <td>@twitter</td>
-                        </tr> */}
-                        </tbody>
-                    </table>
+                    <div className='profile__customers'>
+                        <table className='customers'>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Admin</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {users.map(user => {
+                                    return <tr key={user._id}>
+                                        <td className='profile__customers-id'>{user._id}</td>
+                                        <td>{user.name}</td>
+                                        <td>{user.email}</td>
+                                        <td style={{ textAlign: 'center', transform: 'scale(.7)' }}>
+                                            {
+                                                user.role === 1 ?
+                                                    <i className="nes-icon is-medium star"></i> :
+                                                    <i className="nes-icon is-medium star is-empty"></i>
+
+                                            }
+                                        </td>
+                                        <td className='profile__customers-action'>
+                                            <Link to={`/edit_user/${user._id}`} ><i className="far fa-edit" title="Edit User"></i></Link>
+                                            <button onClick={() => deleteUser(user._id)}><i className="far fa-trash-alt" title="Delete User"></i></button>
+                                        </td>
+                                    </tr>
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </React.Fragment>
