@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import axios from 'axios'
 import { Link, useHistory } from 'react-router-dom'
-
+import { GoogleLogin } from 'react-google-login';
 import { showErrorMessage, showSuccessMessage } from '../../../ultis/notification/Notification'
 
 import * as auth from '../../../../redux/actions/authAction'
@@ -38,7 +38,7 @@ function Login() {
                 loading: false
             })
             localStorage.setItem('firstlogin', true);
-            
+
             dispatch(auth.login());
 
             history.push('/');
@@ -57,6 +57,28 @@ function Login() {
             err: '',
             success: ''
         })
+    }
+
+    const responseGoogle = async (response) => {
+        try {
+            console.log(response);
+            const res = await axios.post('/user/google_login', { tokenId: response.tokenId })
+            setUser({
+                ...user,
+                success: res.data.msg,
+                err: ''
+            })
+            localStorage.setItem('firstlogin', true);
+
+            dispatch(auth.login());
+
+            history.push('/');
+        } catch (err) {
+            err.response.data.msg && setUser({
+                ...user,
+                err: err.response.data.msg, success: ''
+            })
+        }
     }
 
     return (
@@ -88,7 +110,13 @@ function Login() {
                     <button type="submit" className={loading ? "nes-btn  is-disabled" : "nes-btn is-warning"}>Login</button>
                     <Link to="/forgot">Forgot your password?</Link>
                 </div>
-
+                <p style={{ margin: "20px 0" }}>Or Login With</p>
+                <GoogleLogin
+                    clientId="376499416274-1vdl62rk3v202at8nbnejn8iq0h5p4ll.apps.googleusercontent.com"
+                    buttonText="Login With Google"
+                    onSuccess={responseGoogle}
+                    cookiePolicy={'single_host_origin'}
+                />
                 <div style={{ marginTop: '20px' }}>
                     <p>New Customer? <Link to="/register">Register</Link></p>
                 </div>
